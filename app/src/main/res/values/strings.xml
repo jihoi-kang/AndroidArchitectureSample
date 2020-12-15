@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AndroidArchitectureSample</string>
     <string name="msg_enter_query">Enter query string</string>
+    <string name="msg_no_result">No search results found.</string>
+    <string name="price_fmt">%1$s 원</string>
 </resources>

@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/space_xx_small"
-    android:paddingTop="@dimen/space_x_small"
+    android:paddingTop="@dimen/space_median"
     android:paddingEnd="@dimen/space_xx_small"
-    android:paddingBottom="@dimen/space_x_small">
+    android:paddingBottom="@dimen/space_median">
 
     <ImageView
         android:id="@+id/iv_cover"
@@ -38,7 +38,7 @@
         android:layout_marginStart="@dimen/space_small"
         android:layout_marginTop="@dimen/space_x_small"
         android:lineSpacingExtra="4dp"
-        android:textSize="14sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_cover"
         app:layout_constraintTop_toBottomOf="@id/tv_pub_date"
@@ -70,6 +70,7 @@
         tools:text="15,000원" />
 
     <TextView
+        android:id="@+id/tv_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_small"
