@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidArchitectureSample</string>
+    <string name="msg_enter_query">Enter query string</string>
 </resources>
