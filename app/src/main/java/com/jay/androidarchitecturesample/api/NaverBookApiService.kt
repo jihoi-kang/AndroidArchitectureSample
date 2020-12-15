@@ -6,7 +6,7 @@ import retrofit2.http.Query
 interface NaverBookApiService {
 
     @GET("/v1/search/book")
-    fun getBooks(
+    suspend fun getBooks(
         @Query("query") query: String
     ): NaverBookResponse
 
