@@ -42,6 +42,17 @@ class BookListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setupUi()
+
+        val books = bookRepository.getLocalBooks()
+        if (books.isEmpty()) {
+            tv_no_result.isVisible = true
+            rv_book_list.isGone = true
+        } else {
+            tv_no_result.isGone = true
+            rv_book_list.isVisible = true
+
+            bookListAdapter.setBooks(books)
+        }
     }
 
     private fun setupUi() {
