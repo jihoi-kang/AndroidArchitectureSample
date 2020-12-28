@@ -1,5 +1,8 @@
 package com.jay.androidarchitecturesample.model
 
+import androidx.room.Entity
+
+@Entity
 data class Book(
     val author: String,
     val description: String,
