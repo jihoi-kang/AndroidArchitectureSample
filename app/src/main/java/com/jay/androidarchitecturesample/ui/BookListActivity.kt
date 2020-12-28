@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -12,15 +11,20 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.jay.androidarchitecturesample.R
-import com.jay.androidarchitecturesample.api.NaverBookApiService
 import com.jay.androidarchitecturesample.api.RetrofitHelper
+import com.jay.androidarchitecturesample.data.*
+import com.jay.androidarchitecturesample.room.AppDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 
 class BookListActivity : AppCompatActivity() {
 
-    private val naverBookApiService: NaverBookApiService by lazy {
-        RetrofitHelper.naverBookApiService
+    private val bookRepository: BookRepository by lazy {
+        val bookRemoteDataSource: BookRemoteDataSource =
+            BookRemoteDataSourceImpl(RetrofitHelper.naverBookApiService)
+        val bookLocalDataSource: BookLocalDataSource =
+            BookLocalDataSourceImpl(AppDatabase.getInstance(this).bookDao())
+        BookRepositoryImpl(bookRemoteDataSource, bookLocalDataSource)
     }
 
     private val bookListAdapter: BookListAdapter by lazy {
@@ -63,7 +67,7 @@ class BookListActivity : AppCompatActivity() {
             inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
             pb_loading.isVisible = true
-            val books = naverBookApiService.getBooks(query).items
+            val books = bookRepository.getBooks(query)
             if (books.isEmpty()) {
                 tv_no_result.isVisible = true
                 rv_book_list.isGone = true
