@@ -12,6 +12,7 @@ buildscript {
         gsonVersion = '2.8.6'
         glideVersion = '4.11.0'
         coroutinesCoreVersion = '1.4.2'
+        roomVersion = '2.2.6'
 
         junitVersion = '4.13.1'
         extJunitVersion = '1.1.2'
