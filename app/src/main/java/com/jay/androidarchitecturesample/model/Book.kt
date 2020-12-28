@@ -2,7 +2,7 @@ package com.jay.androidarchitecturesample.model
 
 import androidx.room.Entity
 
-@Entity
+@Entity(primaryKeys = [("title")])
 data class Book(
     val author: String,
     val description: String,
