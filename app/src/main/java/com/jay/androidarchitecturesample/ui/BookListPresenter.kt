@@ -1,12 +1,11 @@
 package com.jay.androidarchitecturesample.ui
 
-import com.jay.androidarchitecturesample.base.BasePresenter
 import com.jay.androidarchitecturesample.data.BookRepository
 
 class BookListPresenter(
     private val view: BookListContract.View,
     private val bookRepository: BookRepository,
-) : BasePresenter(), BookListContract.Presenter {
+) : BookListContract.Presenter {
 
     override fun getCachedBooks() {
         val books = bookRepository.getLocalBooks()
