@@ -6,19 +6,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.jay.androidarchitecturesample.R
 import com.jay.androidarchitecturesample.api.RetrofitHelper
+import com.jay.androidarchitecturesample.base.BaseActivity
 import com.jay.androidarchitecturesample.data.*
 import com.jay.androidarchitecturesample.model.Book
 import com.jay.androidarchitecturesample.room.AppDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 
-class BookListActivity : AppCompatActivity(), BookListContract.View {
+class BookListActivity : BaseActivity<BookListContract.Presenter>(), BookListContract.View {
 
     private val bookRepository: BookRepository by lazy {
         val bookRemoteDataSource: BookRemoteDataSource =
@@ -27,8 +27,7 @@ class BookListActivity : AppCompatActivity(), BookListContract.View {
             BookLocalDataSourceImpl(AppDatabase.getInstance(this).bookDao())
         BookRepositoryImpl(bookRemoteDataSource, bookLocalDataSource)
     }
-
-    private val presenter: BookListContract.Presenter by lazy {
+    override val presenter: BookListContract.Presenter by lazy {
         BookListPresenter(this, bookRepository)
     }
 
@@ -51,6 +50,7 @@ class BookListActivity : AppCompatActivity(), BookListContract.View {
     }
 
     private fun setupUi() {
+        progressBar = pb_loading
         rv_book_list.adapter = bookListAdapter
 
         et_search.setOnEditorActionListener { _, actionId, _ ->
@@ -72,14 +72,6 @@ class BookListActivity : AppCompatActivity(), BookListContract.View {
 
     override fun hideKeyboard() {
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-    }
-
-    override fun showLoading() {
-        pb_loading.isVisible = true
-    }
-
-    override fun hideLoading() {
-        pb_loading.isGone = true
     }
 
     override fun showBookItems() {
