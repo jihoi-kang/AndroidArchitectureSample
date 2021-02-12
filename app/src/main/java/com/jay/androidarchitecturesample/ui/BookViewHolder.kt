@@ -34,7 +34,11 @@ class BookViewHolder(
         tvTitle.text = getHtmlText(book.title)
         tvDetailInfo.text = "${getHtmlText(book.author)} | ${book.publisher}"
 
-        val price: Long = book.price.toLong()
+        val price = if (book.price.contains(".")) {
+            book.price.substring(0, book.price.indexOf(".")).toLong()
+        } else {
+            book.price.toLong()
+        }
         val commaFormat = DecimalFormat("###,###") //콤마
         tvPrice.text =
             String.format(itemView.context.getString(R.string.price_fmt), commaFormat.format(price))
