@@ -9,16 +9,19 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.jay.androidarchitecturesample.R
 import com.jay.androidarchitecturesample.api.RetrofitHelper
 import com.jay.androidarchitecturesample.data.*
+import com.jay.androidarchitecturesample.databinding.ActivityBookListBinding
 import com.jay.androidarchitecturesample.model.Book
 import com.jay.androidarchitecturesample.room.AppDatabase
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 
 class BookListActivity : AppCompatActivity(), BookListContract.View {
+
+    private lateinit var binding: ActivityBookListBinding
 
     private val bookRepository: BookRepository by lazy {
         val bookRemoteDataSource: BookRemoteDataSource =
@@ -44,28 +47,28 @@ class BookListActivity : AppCompatActivity(), BookListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         setupUi()
         presenter.getCachedBooks()
     }
 
     private fun setupUi() {
-        rv_book_list.adapter = bookListAdapter
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_book_list)
 
-        et_search.setOnEditorActionListener { _, actionId, _ ->
+        binding.rvBookList.adapter = bookListAdapter
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 lifecycleScope.launch {
-                    presenter.getBooks(et_search.text.toString())
+                    presenter.getBooks(binding.etSearch.text.toString())
                 }
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
 
-        iv_search.setOnClickListener {
+        binding.ivSearch.setOnClickListener {
             lifecycleScope.launch {
-                presenter.getBooks(et_search.text.toString())
+                presenter.getBooks(binding.etSearch.text.toString())
             }
         }
     }
@@ -75,21 +78,21 @@ class BookListActivity : AppCompatActivity(), BookListContract.View {
     }
 
     override fun showLoading() {
-        pb_loading.isVisible = true
+        binding.pbLoading.isVisible = true
     }
 
     override fun hideLoading() {
-        pb_loading.isGone = true
+        binding.pbLoading.isGone = true
     }
 
     override fun showBookItems() {
-        tv_no_result.isGone = true
-        rv_book_list.isVisible = true
+        binding.tvNoResult.isGone = true
+        binding.rvBookList.isVisible = true
     }
 
     override fun showNoResult() {
-        tv_no_result.isVisible = true
-        rv_book_list.isGone = true
+        binding.tvNoResult.isVisible = true
+        binding.rvBookList.isGone = true
     }
 
     override fun setBookItems(books: List<Book>) {
