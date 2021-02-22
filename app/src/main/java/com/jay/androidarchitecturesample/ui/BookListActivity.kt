@@ -4,22 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
 import androidx.lifecycle.lifecycleScope
 import com.jay.androidarchitecturesample.R
 import com.jay.androidarchitecturesample.api.RetrofitHelper
 import com.jay.androidarchitecturesample.data.*
 import com.jay.androidarchitecturesample.databinding.ActivityBookListBinding
-import com.jay.androidarchitecturesample.model.Book
 import com.jay.androidarchitecturesample.room.AppDatabase
-import kotlinx.coroutines.launch
 
-class BookListActivity : AppCompatActivity(), BookListContract.View {
+class BookListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookListBinding
 
@@ -31,8 +27,8 @@ class BookListActivity : AppCompatActivity(), BookListContract.View {
         BookRepositoryImpl(bookRemoteDataSource, bookLocalDataSource)
     }
 
-    private val presenter: BookListContract.Presenter by lazy {
-        BookListPresenter(this, bookRepository)
+    private val viewModel: BookListViewModel by lazy {
+        BookListViewModel(lifecycleScope, bookRepository)
     }
 
     private val bookListAdapter: BookListAdapter by lazy {
@@ -49,54 +45,29 @@ class BookListActivity : AppCompatActivity(), BookListContract.View {
         super.onCreate(savedInstanceState)
 
         setupUi()
-        presenter.getCachedBooks()
+        setupObserve()
+        viewModel.getCachedBooks()
     }
 
     private fun setupUi() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_book_list)
-
+        binding.vm = viewModel
         binding.rvBookList.adapter = bookListAdapter
-        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                lifecycleScope.launch {
-                    presenter.getBooks(binding.etSearch.text.toString())
+    }
+
+    private fun setupObserve() {
+        viewModel.hideKeyboardEvent
+            .addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                    inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
                 }
-                return@setOnEditorActionListener true
+            })
+        viewModel.bookItems.addOnPropertyChangedCallback(object :
+            Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                bookListAdapter.setBooks(viewModel.bookItems.get() ?: emptyList())
             }
-            return@setOnEditorActionListener false
-        }
-
-        binding.ivSearch.setOnClickListener {
-            lifecycleScope.launch {
-                presenter.getBooks(binding.etSearch.text.toString())
-            }
-        }
-    }
-
-    override fun hideKeyboard() {
-        inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-    }
-
-    override fun showLoading() {
-        binding.pbLoading.isVisible = true
-    }
-
-    override fun hideLoading() {
-        binding.pbLoading.isGone = true
-    }
-
-    override fun showBookItems() {
-        binding.tvNoResult.isGone = true
-        binding.rvBookList.isVisible = true
-    }
-
-    override fun showNoResult() {
-        binding.tvNoResult.isVisible = true
-        binding.rvBookList.isGone = true
-    }
-
-    override fun setBookItems(books: List<Book>) {
-        bookListAdapter.setBooks(books)
+        })
     }
 
 }
