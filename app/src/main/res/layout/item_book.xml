@@ -1,85 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingStart="@dimen/space_xx_small"
-    android:paddingTop="@dimen/space_median"
-    android:paddingEnd="@dimen/space_xx_small"
-    android:paddingBottom="@dimen/space_median">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/iv_cover"
-        android:layout_width="@dimen/book_image_width"
-        android:layout_height="@dimen/book_image_height"
-        android:scaleType="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_launcher_foreground" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_pub_date"
-        android:layout_width="0dp"
+        <variable
+            name="item"
+            type="com.jay.androidarchitecturesample.model.Book" />
+
+        <variable
+            name="viewModel"
+            type="com.jay.androidarchitecturesample.ui.BookListViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_small"
-        android:textColor="@color/book_pub_date"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_cover"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="2020-12-15" />
+        android:onClick="@{() -> viewModel.openBookDetail(item)}"
+        android:paddingStart="@dimen/space_xx_small"
+        android:paddingTop="@dimen/space_median"
+        android:paddingEnd="@dimen/space_xx_small"
+        android:paddingBottom="@dimen/space_median">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_small"
-        android:layout_marginTop="@dimen/space_x_small"
-        android:lineSpacingExtra="4dp"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_cover"
-        app:layout_constraintTop_toBottomOf="@id/tv_pub_date"
-        tools:text="돌이킬 수 없는 약속" />
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="@dimen/book_image_width"
+            android:layout_height="@dimen/book_image_height"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:loadUrl="@{item.image}"
+            tools:src="@drawable/ic_launcher_foreground" />
 
-    <TextView
-        android:id="@+id/tv_detail_info"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_small"
-        android:layout_marginTop="@dimen/space_x_small"
-        android:lineSpacingExtra="4dp"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_cover"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
-        tools:text="야쿠마루 가쿠 | 북플라자" />
+        <TextView
+            android:id="@+id/tv_pub_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_small"
+            android:text="@{item.pubdate}"
+            android:textColor="@color/book_pub_date"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_cover"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2020-12-15" />
 
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_small"
-        android:layout_marginTop="@dimen/space_x_small"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_cover"
-        app:layout_constraintTop_toBottomOf="@id/tv_detail_info"
-        tools:text="15,000원" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginTop="@dimen/space_x_small"
+            android:lineSpacingExtra="4dp"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_cover"
+            app:layout_constraintTop_toBottomOf="@id/tv_pub_date"
+            bind:htmlText="@{item.title}"
+            tools:text="돌이킬 수 없는 약속" />
 
-    <TextView
-        android:id="@+id/tv_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_small"
-        android:layout_marginTop="@dimen/space_x_small"
-        android:lineSpacingExtra="4dp"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_cover"
-        app:layout_constraintTop_toBottomOf="@id/tv_price"
-        tools:text="응징과 용서의 진정한 의미는 무엇인가!주인공이 과거에 저지른 죄, 그리고 15년 전에 했던 어떤 약속을 둘러싸고 벌어지는 미스터리를 그린 야쿠마루 가쿠의 소설 『돌이킬 수 없는 약속』. 자신이 일하던 가게의 손님이었던 오치아이의 제안으로 바를 겸하는 레스토랑의 공동경영자가 된 무카이. 그는 지금..." />
+        <TextView
+            android:id="@+id/tv_detail_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginTop="@dimen/space_x_small"
+            android:lineSpacingExtra="4dp"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_cover"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            bind:htmlText="@{item.author + ` | ` + item.publisher}"
+            tools:text="야쿠마루 가쿠 | 북플라자" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginTop="@dimen/space_x_small"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_cover"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_info"
+            bind:priceText="@{item.price}"
+            tools:text="15,000원" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginTop="@dimen/space_x_small"
+            android:lineSpacingExtra="4dp"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_cover"
+            app:layout_constraintTop_toBottomOf="@id/tv_price"
+            bind:htmlText="@{item.description}"
+            tools:text="응징과 용서의 진정한 의미는 무엇인가!주인공이 과거에 저지른 죄, 그리고 15년 전에 했던 어떤 약속을 둘러싸고 벌어지는 미스터리를 그린 야쿠마루 가쿠의 소설 『돌이킬 수 없는 약속』. 자신이 일하던 가게의 손님이었던 오치아이의 제안으로 바를 겸하는 레스토랑의 공동경영자가 된 무카이. 그는 지금..." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

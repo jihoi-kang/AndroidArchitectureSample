@@ -32,9 +32,7 @@ class BookListActivity : AppCompatActivity() {
     }
 
     private val bookListAdapter: BookListAdapter by lazy {
-        BookListAdapter { link ->
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
-        }
+        BookListAdapter(viewModel)
     }
 
     private val inputMethodManager: InputMethodManager by lazy {
@@ -60,6 +58,14 @@ class BookListActivity : AppCompatActivity() {
             .addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                     inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                }
+            })
+        viewModel.openBookDetailEvent
+            .addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                    startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.openBookDetailEvent.get()))
+                    )
                 }
             })
         viewModel.bookItems.addOnPropertyChangedCallback(object :

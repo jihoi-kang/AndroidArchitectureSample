@@ -1,15 +1,15 @@
 package com.jay.androidarchitecturesample.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jay.androidarchitecturesample.R
+import com.jay.androidarchitecturesample.databinding.ItemBookBinding
 import com.jay.androidarchitecturesample.model.Book
 
-
 class BookListAdapter(
-    private val onItemClick: (String) -> Unit
+    private val viewModel: BookListViewModel
 ) : RecyclerView.Adapter<BookViewHolder>() {
 
     private val books: MutableList<Book> = mutableListOf()
@@ -21,9 +21,14 @@ class BookListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
-        val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_book, parent, false)
-        return BookViewHolder(view, onItemClick)
+        val binding = DataBindingUtil.inflate<ItemBookBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.item_book,
+            parent,
+            false
+        )
+
+        return BookViewHolder(binding, viewModel)
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {

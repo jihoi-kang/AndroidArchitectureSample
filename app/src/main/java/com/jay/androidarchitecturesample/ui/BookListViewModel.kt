@@ -15,6 +15,7 @@ class BookListViewModel(
     val loading = ObservableField(false)
 
     val hideKeyboardEvent = ObservableField<Unit>()
+    val openBookDetailEvent = ObservableField<String>()
 
     fun getCachedBooks() {
         val books = bookRepository.getLocalBooks()
@@ -31,6 +32,10 @@ class BookListViewModel(
             loading.set(false)
             bookItems.set(books)
         }
+    }
+
+    fun openBookDetail(book: Book) {
+        openBookDetailEvent.set(book.link)
     }
 
 }
